@@ -1,0 +1,2557 @@
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TukuPoa - Secondhand Marketplace</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1677FF',
+                        secondary: '#FF6A00',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        error: '#F5222D',
+                        neutral: {
+                            100: '#F5F5F5',
+                            200: '#E8E8E8',
+                            300: '#D9D9D9',
+                            400: '#BFBFBF',
+                            500: '#8C8C8C',
+                            600: '#595959',
+                            700: '#434343',
+                            800: '#262626',
+                            900: '#1F1F1F',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 2px 8px rgba(0, 0, 0, 0.08)',
+                        'card-hover': '0 4px 16px rgba(0, 0, 0, 0.12)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .card-transition {
+                transition: all 0.3s ease;
+            }
+            .text-shadow {
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+            .bg-gradient {
+                background: linear-gradient(135deg, #E6F7FF 0%, #F0F9FF 100%);
+            }
+        }
+    </style>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F5F5F5;
+        }
+        
+        .hero-pattern {
+            background-image: url('https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/5105b73dcf0d401ab704a80901f83a1e~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=2026011521561387F0CBA1521CF3CA2AFB&rrcfp=f06b921b&x-expires=1771077436&x-signature=fgFHBYjzhdNyE9%2FzjcxPI4zORbI%3D');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .category-item.active {
+            color: #1677FF;
+            border-bottom: 2px solid #1677FF;
+        }
+        
+        .product-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(22, 119, 255, 0.3);
+        }
+        
+        .btn-secondary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255, 106, 0, 0.3);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-in-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Skeleton Loading Animation */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+        }
+        
+        @keyframes skeleton-loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Image Search Styles */
+        .image-search-modal {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .camera-shutter {
+            animation: shutterClick 0.3s ease-out;
+        }
+        
+        @keyframes shutterClick {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.8); }
+            100% { transform: scale(1); }
+        }
+        
+        .image-upload-preview {
+            transition: all 0.3s ease;
+        }
+        
+        .image-upload-preview:hover {
+            transform: scale(1.05);
+        }
+        
+        .filter-chip {
+            transition: all 0.2s ease;
+        }
+        
+        .filter-chip:hover {
+            transform: translateY(-1px);
+        }
+        
+        .filter-chip.active {
+            background-color: #1677FF;
+            color: white;
+        }
+        
+        /* Condition Rating Styles */
+        .condition-badge {
+            transition: all 0.2s ease;
+        }
+        
+        .condition-badge:hover {
+            transform: scale(1.05);
+        }
+        
+        .condition-99 {
+            background: linear-gradient(135deg, #52C41A 0%, #73D13D 100%);
+            color: white;
+        }
+        
+        .condition-95 {
+            background: linear-gradient(135deg, #1677FF 0%, #4096FF 100%);
+            color: white;
+        }
+        
+        .condition-90 {
+            background: linear-gradient(135deg, #FAAD14 0%, #FFC53D 100%);
+            color: white;
+        }
+        
+        .condition-80 {
+            background: linear-gradient(135deg, #FA8C16 0%, #FFA940 100%);
+            color: white;
+        }
+        
+        .condition-modal {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+        
+        .condition-item {
+            transition: all 0.2s ease;
+        }
+        
+        .condition-item:hover {
+            background-color: #F0F9FF;
+            transform: translateX(4px);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header/Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-4">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/493aa1cd91444607b174998a2937dbf2~tplv-a9rns2rl98-image.image?lk3s=8e244e95&amp;rcl=2026011521561387F0CBA1521CF3CA2AFB&amp;rrcfp=f06b921b&amp;x-expires=1771077436&amp;x-signature=HT%2FMLtgezEVnrTn6E4gM2B%2BEAMk%3D" alt="TukuPoa Logo" class="h-8 w-8">
+                    <h1 class="text-xl font-bold text-primary" data-lang="brand">tukupoa</h1>
+                </div>
+                
+                <!-- Search Bar -->
+                <div class="hidden md:flex flex-1 max-w-xl mx-6">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="Search for items..." class="w-full py-2 pl-10 pr-12 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" data-lang="search_placeholder" id="main-search-input">
+                        <i class="fa fa-search absolute left-3 top-3 text-neutral-400"></i>
+                        <button class="absolute right-3 top-2.5 text-neutral-400 hover:text-primary transition-colors" id="image-search-button" title="Search by image">
+                            <i class="fa fa-camera text-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Navigation Links -->
+                <nav class="hidden md:flex items-center space-x-6">
+                    <a href="#" class="text-neutral-700 hover:text-primary transition-colors" data-lang="how_it_works">How It Works</a>
+                    <a href="#" class="text-neutral-700 hover:text-primary transition-colors" data-lang="about">About</a>
+                    <button id="language-toggle" class="flex items-center space-x-1 text-neutral-700 hover:text-primary transition-colors">
+                        <span data-lang="language">English</span>
+                        <i class="fa fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="flex items-center space-x-4">
+                        <button class="relative text-neutral-700 hover:text-primary transition-colors" id="chat-button">
+                            <i class="fa fa-comments text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </button>
+                        <div class="relative" id="user-menu-container">
+                            <button class="flex items-center space-x-2 text-neutral-700 hover:text-primary transition-colors" id="user-menu-button">
+                                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">U</div>
+                                <span class="hidden lg:inline" data-lang="my_account">My Account</span>
+                                <i class="fa fa-chevron-down text-xs"></i>
+                            </button>
+                            <div class="hidden absolute right-0 mt-2 bg-white shadow-lg rounded-lg overflow-hidden z-50 w-48" id="user-dropdown">
+                                <ul>
+                                    <li>
+                                        <a href="#" class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors flex items-center">
+                                            <i class="fa fa-user mr-2 text-primary"></i>
+                                            <span data-lang="profile">Profile</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors flex items-center">
+                                            <i class="fa fa-heart mr-2 text-primary"></i>
+                                            <span data-lang="favorites">Favorites</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors flex items-center">
+                                            <i class="fa fa-shopping-bag mr-2 text-primary"></i>
+                                            <span data-lang="my_listings">My Listings</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors flex items-center">
+                                            <i class="fa fa-cog mr-2 text-primary"></i>
+                                            <span data-lang="settings">Settings</span>
+                                        </a>
+                                    </li>
+                                    <li class="border-t border-neutral-200">
+                                        <a href="#" class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors flex items-center text-error">
+                                            <i class="fa fa-sign-out mr-2"></i>
+                                            <span data-lang="logout">Logout</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center space-x-4">
+                    <button class="relative text-neutral-700 focus:outline-none" id="mobile-chat-button">
+                        <i class="fa fa-comments text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-secondary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                    </button>
+                    <button class="text-neutral-700 focus:outline-none" id="mobile-menu-button">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Search (Visible only on mobile) -->
+            <div class="md:hidden py-3">
+                <div class="relative w-full">
+                    <input type="text" placeholder="Search for items..." class="w-full py-2 pl-10 pr-4 rounded-full border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" data-lang="search_placeholder">
+                    <i class="fa fa-search absolute left-3 top-3 text-neutral-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu (Hidden by default) -->
+        <div class="md:hidden hidden bg-white border-t border-neutral-200" id="mobile-menu">
+            <div class="container mx-auto px-4 py-3">
+                <nav class="flex flex-col space-y-3">
+                    <a href="#" class="text-neutral-700 hover:text-primary py-2 transition-colors" data-lang="how_it_works">How It Works</a>
+                    <a href="#" class="text-neutral-700 hover:text-primary py-2 transition-colors" data-lang="about">About</a>
+                    <div class="flex items-center justify-between py-2 border-t border-neutral-200">
+                        <span data-lang="language">English</span>
+                        <button id="mobile-language-toggle" class="text-neutral-700 hover:text-primary">
+                            <i class="fa fa-chevron-down"></i>
+                        </button>
+                    </div>
+                    <div class="flex flex-col space-y-3 pt-2 border-t border-neutral-200">
+                        <a href="#" class="flex items-center text-neutral-700 py-2 hover:bg-neutral-50 transition-colors">
+                            <i class="fa fa-user-circle mr-3 text-primary"></i>
+                            <span data-lang="profile">Profile</span>
+                        </a>
+                        <a href="#" class="flex items-center text-neutral-700 py-2 hover:bg-neutral-50 transition-colors">
+                            <i class="fa fa-heart mr-3 text-primary"></i>
+                            <span data-lang="favorites">Favorites</span>
+                        </a>
+                        <a href="#" class="flex items-center text-neutral-700 py-2 hover:bg-neutral-50 transition-colors">
+                            <i class="fa fa-shopping-bag mr-3 text-primary"></i>
+                            <span data-lang="my_listings">My Listings</span>
+                        </a>
+                        <a href="#" class="flex items-center text-neutral-700 py-2 hover:bg-neutral-50 transition-colors">
+                            <i class="fa fa-cog mr-3 text-primary"></i>
+                            <span data-lang="settings">Settings</span>
+                        </a>
+                        <div class="flex space-x-3 pt-2">
+                            <a href="#" class="flex-1 text-center text-neutral-700 py-2 border border-neutral-300 rounded-full hover:bg-neutral-50 transition-colors" data-lang="login">Login</a>
+                            <a href="#" class="flex-1 text-center bg-primary text-white py-2 rounded-full hover:bg-primary/90 transition-colors" data-lang="sign_up">Sign Up</a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        
+        <!-- Language Dropdown (Hidden by default) -->
+        <div class="hidden absolute right-4 mt-2 bg-white shadow-lg rounded-lg overflow-hidden z-50 w-48" id="language-dropdown">
+            <ul>
+                <li>
+                    <button class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors language-option" data-lang="english" data-value="en">English</button>
+                </li>
+                <li>
+                    <button class="w-full text-left px-4 py-2 hover:bg-neutral-100 transition-colors language-option" data-lang="swahili" data-value="sw">Kiswahili</button>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-pattern py-12 md:py-20">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h1 class="text-3xl md:text-5xl font-bold text-white mb-4 text-shadow fade-in" data-lang="hero_title">Buy &amp; Sell Secondhand Items Easily</h1>
+                <p class="text-lg md:text-xl text-white/90 mb-8 fade-in" style="animation-delay: 0.2s;" data-lang="hero_subtitle">Join our community and find great deals on pre-loved items or sell what you don't need anymore.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in" style="animation-delay: 0.4s;">
+                    <a href="#products" class="btn-primary bg-primary text-white px-6 py-3 rounded-full font-medium text-center" data-lang="explore_items">Explore Items</a>
+                    <a href="#" class="btn-secondary bg-secondary text-white px-6 py-3 rounded-full font-medium text-center" data-lang="sell_item">Sell an Item</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-8 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold text-neutral-800" data-lang="categories">Categories</h2>
+                <a href="#" class="text-primary hover:underline flex items-center" data-lang="view_all">
+                    <span>View All</span>
+                    <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                </a>
+            </div>
+            
+            <div class="overflow-x-auto scrollbar-hide">
+                <div class="flex space-x-6 pb-2 min-w-max">
+                    <button class="category-item active flex flex-col items-center space-y-2 px-3 py-2" data-category="all">
+                        <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                            <i class="fa fa-th-large text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="all_categories">All</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="electronics">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-mobile text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="electronics">Electronics</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="clothing">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-shopping-bag text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="clothing">Clothing</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="furniture">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-home text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="furniture">Furniture</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="books">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-book text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="books">Books</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="bicycles">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-bicycle text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="bicycles">Bicycles</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="appliances">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-plug text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="appliances">Appliances</span>
+                    </button>
+                    <button class="category-item flex flex-col items-center space-y-2 px-3 py-2" data-category="other">
+                        <div class="w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-700">
+                            <i class="fa fa-ellipsis-h text-xl"></i>
+                        </div>
+                        <span class="text-sm font-medium" data-lang="other">Other</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hot Sales Section -->
+    <section class="py-12 bg-gradient">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-2xl font-bold text-neutral-800" data-lang="hot_sales">Hot Sales</h2>
+                <a href="#" class="text-primary hover:underline flex items-center" data-lang="view_all">
+                    <span>View All</span>
+                    <i class="fa fa-chevron-right ml-1 text-xs"></i>
+                </a>
+            </div>
+            
+            <div class="overflow-x-auto scrollbar-hide">
+                <div class="flex space-x-6 pb-4 min-w-max">
+                    <!-- Hot Sale Item 1 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover w-72 flex-shrink-0">
+                        <div class="relative">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/labis/75465b9847562e08109251e80e92f9cb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=w6KfrTlEYWCaXL%2F7Wwl3iKWOgYg%3D" alt="VIVO X23 Phone" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">
+                                -30%
+                            </div>
+                            <div class="absolute top-3 right-3 condition-badge condition-99 text-xs font-bold px-2 py-1 rounded">
+                                99% New
+                            </div>
+                            <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium text-neutral-800">VIVO X23 Phone</h3>
+                                <div>
+                                    <span class="font-bold text-secondary">$150</span>
+                                    <span class="text-xs text-neutral-400 line-through ml-1">$215</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center text-neutral-500">
+                                    <i class="fa fa-map-marker mr-1"></i>
+                                    <span>Dar es Salaam</span>
+                                </span>
+                                <span class="flex items-center text-primary">
+                                    <i class="fa fa-bolt mr-1"></i>
+                                    <span>Hot</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hot Sale Item 2 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover w-72 flex-shrink-0">
+                        <div class="relative">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_47fd7b5ca21b620445b8a4f6afa468eb_sx_972397_www1194-1194~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=1%2FVFztdBDRZGbO0y9jSmRz7hmsE%3D" alt="Burberry Coat" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">
+                                -40%
+                            </div>
+                            <div class="absolute top-3 right-3 condition-badge condition-95 text-xs font-bold px-2 py-1 rounded">
+                                95% New
+                            </div>
+                            <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium text-neutral-800">Burberry Wool Coat</h3>
+                                <div>
+                                    <span class="font-bold text-secondary">$350</span>
+                                    <span class="text-xs text-neutral-400 line-through ml-1">$585</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center text-neutral-500">
+                                    <i class="fa fa-map-marker mr-1"></i>
+                                    <span>Mwanza</span>
+                                </span>
+                                <span class="flex items-center text-primary">
+                                    <i class="fa fa-bolt mr-1"></i>
+                                    <span>Hot</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hot Sale Item 3 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover w-72 flex-shrink-0">
+                        <div class="relative">
+                            <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/vfReEEqO_m_e657b5b0a09cfc2099a50ba21f8eb026_sx_143476_www800-800~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=ev4pg4CNbegceZEuNwtCyeV7tUs%3D" alt="Beats Headphones" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">
+                                -25%
+                            </div>
+                            <div class="absolute top-3 right-3 condition-badge condition-99 text-xs font-bold px-2 py-1 rounded">
+                                99% New
+                            </div>
+                            <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium text-neutral-800">Beats Studio Buds+</h3>
+                                <div>
+                                    <span class="font-bold text-secondary">$120</span>
+                                    <span class="text-xs text-neutral-400 line-through ml-1">$160</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center text-neutral-500">
+                                    <i class="fa fa-map-marker mr-1"></i>
+                                    <span>Arusha</span>
+                                </span>
+                                <span class="flex items-center text-primary">
+                                    <i class="fa fa-bolt mr-1"></i>
+                                    <span>Hot</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hot Sale Item 4 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover w-72 flex-shrink-0">
+                        <div class="relative">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/labis/abf936577291f1b78733364ac395714a~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=JzYnCjgxkcc7GeKHW2DdKdh%2BgAM%3D" alt="Giant Bicycle" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">
+                                -15%
+                            </div>
+                            <div class="absolute top-3 right-3 condition-badge condition-90 text-xs font-bold px-2 py-1 rounded">
+                                90% New
+                            </div>
+                            <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium text-neutral-800">Giant Mountain Bike</h3>
+                                <div>
+                                    <span class="font-bold text-secondary">$180</span>
+                                    <span class="text-xs text-neutral-400 line-through ml-1">$210</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center text-neutral-500">
+                                    <i class="fa fa-map-marker mr-1"></i>
+                                    <span>Zanzibar</span>
+                                </span>
+                                <span class="flex items-center text-primary">
+                                    <i class="fa fa-bolt mr-1"></i>
+                                    <span>Hot</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hot Sale Item 5 -->
+                    <div class="bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover w-72 flex-shrink-0">
+                        <div class="relative">
+                            <img src="https://p26-doubao-search-sign.byteimg.com/labis/5b4ce25811119dd5747a8f79a3216c48~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=XVO%2BsaqJV%2BQIfsyrdGSpjvL5NnA%3D" alt="Refrigerator" class="w-full h-40 object-cover">
+                            <div class="absolute top-3 left-3 bg-secondary text-white text-xs font-bold px-2 py-1 rounded">
+                                -20%
+                            </div>
+                            <div class="absolute top-3 right-3 condition-badge condition-80 text-xs font-bold px-2 py-1 rounded">
+                                80% New
+                            </div>
+                            <button class="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                                <i class="fa fa-heart-o"></i>
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="font-medium text-neutral-800">Midea Refrigerator</h3>
+                                <div>
+                                    <span class="font-bold text-secondary">$280</span>
+                                    <span class="text-xs text-neutral-400 line-through ml-1">$350</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center text-neutral-500">
+                                    <i class="fa fa-map-marker mr-1"></i>
+                                    <span>Mbeya</span>
+                                </span>
+                                <span class="flex items-center text-primary">
+                                    <i class="fa fa-bolt mr-1"></i>
+                                    <span>Hot</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products Section -->
+    <section id="products" class="py-12 bg-neutral-100">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+                <h2 class="text-2xl font-bold text-neutral-800 mb-4 md:mb-0" data-lang="featured_items">Featured Items</h2>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <select class="appearance-none bg-white border border-neutral-300 rounded-md py-2 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" data-lang="sort_by">
+                            <option value="newest" data-lang="newest">Newest</option>
+                            <option value="price_low" data-lang="price_low_to_high">Price: Low to High</option>
+                            <option value="price_high" data-lang="price_high_to_low">Price: High to Low</option>
+                            <option value="popular" data-lang="most_popular">Most Popular</option>
+                        </select>
+                        <i class="fa fa-chevron-down absolute right-3 top-3 text-neutral-400 pointer-events-none"></i>
+                    </div>
+                    <div class="relative">
+                        <select class="appearance-none bg-white border border-neutral-300 rounded-md py-2 pl-3 pr-8 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary" data-lang="filter">
+                            <option value="all" data-lang="all_listings">All Listings</option>
+                            <option value="nearby" data-lang="nearby">Nearby</option>
+                            <option value="new" data-lang="new_condition">New Condition</option>
+                            <option value="used" data-lang="used_condition">Used Condition</option>
+                        </select>
+                        <i class="fa fa-chevron-down absolute right-3 top-3 text-neutral-400 pointer-events-none"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Advanced Filters -->
+            <div class="mb-6 bg-white rounded-lg p-4 shadow-sm">
+                <div class="flex flex-wrap gap-3 mb-4">
+                    <button class="filter-chip px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium hover:bg-primary/20 active" data-filter="all">
+                        All
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium hover:bg-neutral-200" data-filter="price_low">
+                        <i class="fa fa-arrow-down mr-1"></i> Low Price
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium hover:bg-neutral-200" data-filter="hot_sales">
+                        <i class="fa fa-fire mr-1"></i> Hot Sales
+                    </button>
+                    <button class="filter-chip px-4 py-2 bg-neutral-100 text-neutral-700 rounded-full text-sm font-medium hover:bg-neutral-200" data-filter="nearby">
+                        <i class="fa fa-map-marker mr-1"></i> Nearby
+                    </button>
+                </div>
+                
+                <!-- Location Filter -->
+                <div class="flex flex-wrap gap-3">
+                    <span class="text-sm font-medium text-neutral-700 whitespace-nowrap pt-2">Location:</span>
+                    <button class="filter-chip px-3 py-1.5 bg-primary/10 text-primary rounded-full text-xs font-medium hover:bg-primary/20 active" data-location="all">
+                        All
+                    </button>
+                    <button class="filter-chip px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-neutral-200" data-location="dar_es_salaam">
+                        Dar es Salaam
+                    </button>
+                    <button class="filter-chip px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-neutral-200" data-location="mwanza">
+                        Mwanza
+                    </button>
+                    <button class="filter-chip px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-neutral-200" data-location="arusha">
+                        Arusha
+                    </button>
+                    <button class="filter-chip px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-neutral-200" data-location="zanzibar">
+                        Zanzibar
+                    </button>
+                    <button class="filter-chip px-3 py-1.5 bg-neutral-100 text-neutral-700 rounded-full text-xs font-medium hover:bg-neutral-200" data-location="mbeya">
+                        Mbeya
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Products Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="products-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/labis/75465b9847562e08109251e80e92f9cb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=w6KfrTlEYWCaXL%2F7Wwl3iKWOgYg%3D" alt="VIVO X23 Phone" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-95 text-xs font-bold px-2 py-1 rounded">
+                            95% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_1_title">VIVO X23 Phone</h3>
+                            <span class="font-bold text-secondary">$150</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_1_desc">6+128GB, screen fingerprint, dual SIM, good condition</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Dar es Salaam</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="2_hours_ago">2 hours ago</span>
+                            </span>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-neutral-200">
+                            <button class="w-full bg-primary/10 text-primary py-2 rounded-lg hover:bg-primary/20 transition-colors flex items-center justify-center text-sm font-medium" data-lang="quick_chat">
+                                <i class="fa fa-comment mr-2"></i>
+                                <span>Quick Chat</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p11-doubao-search-sign.byteimg.com/ecom-shop-material/jpeg_m_47fd7b5ca21b620445b8a4f6afa468eb_sx_972397_www1194-1194~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=1%2FVFztdBDRZGbO0y9jSmRz7hmsE%3D" alt="Burberry Coat" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-99 text-xs font-bold px-2 py-1 rounded">
+                            99% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_2_title">Burberry Wool Coat</h3>
+                            <span class="font-bold text-secondary">$350</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_2_desc">Women's black wool-cashmere blend coat, size M, 99% new</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Morogoro</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="5_hours_ago">5 hours ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/labis/a8568024c42f32451cc9f45c6aa328e9~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=QKYjAZkAXsEEI6EbQ75L73U27V0%3D" alt="Wooden Wardrobe" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-90 text-xs font-bold px-2 py-1 rounded">
+                            90% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_3_title">Wooden Wardrobe</h3>
+                            <span class="font-bold text-secondary">$220</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_3_desc">Solid wood wardrobe with 4 doors and 3 drawers, good condition</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Tanga</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="1_day_ago">1 day ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/tos-cn-i-xv4ileqgde/ccdaa296f7f14b928fd71ddfd5183725~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=z2BUoZf5IKBqs9iX%2FWnFD9zeBK8%3D" alt="Used Books" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-80 text-xs font-bold px-2 py-1 rounded">
+                            80% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_4_title">Used Books Collection</h3>
+                            <span class="font-bold text-secondary">$45</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_4_desc">Collection of 20+ books including fiction, non-fiction, and textbooks</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Dodoma</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="2_days_ago">2 days ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 5 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/labis/abf936577291f1b78733364ac395714a~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=JzYnCjgxkcc7GeKHW2DdKdh%2BgAM%3D" alt="Giant Bicycle" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-90 text-xs font-bold px-2 py-1 rounded">
+                            90% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_5_title">Giant Mountain Bike</h3>
+                            <span class="font-bold text-secondary">$180</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_5_desc">Giant ATX850 mountain bike, red, 27 speeds, good condition</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Kigoma</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="3_days_ago">3 days ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 6 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/ecom-shop-material/vfReEEqO_m_e657b5b0a09cfc2099a50ba21f8eb026_sx_143476_www800-800~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=ev4pg4CNbegceZEuNwtCyeV7tUs%3D" alt="Beats Headphones" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-99 text-xs font-bold px-2 py-1 rounded">
+                            99% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_6_title">Beats Studio Buds+</h3>
+                            <span class="font-bold text-secondary">$120</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_6_desc">Transparent in-ear Bluetooth headphones with active noise cancellation, 99% new</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Moshi</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="4_hours_ago">4 hours ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 7 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p26-doubao-search-sign.byteimg.com/labis/5b4ce25811119dd5747a8f79a3216c48~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=XVO%2BsaqJV%2BQIfsyrdGSpjvL5NnA%3D" alt="Refrigerator" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-80 text-xs font-bold px-2 py-1 rounded">
+                            80% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_7_title">Midea Refrigerator</h3>
+                            <span class="font-bold text-secondary">$280</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_7_desc">Double door refrigerator, 200L capacity, silver color, good working condition</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Tabora</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="1_week_ago">1 week ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 8 -->
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-card hover:shadow-card-hover">
+                    <div class="relative">
+                        <img src="https://p3-doubao-search-sign.byteimg.com/labis/39d49c262e6da393a07d8e058b6a6cfb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=U4Z6bdVwEW3Ew283p0Ec2VTOgC8%3D" alt="Vertu Phone" class="w-full h-48 object-cover">
+                        <div class="absolute top-3 right-3 condition-badge condition-95 text-xs font-bold px-2 py-1 rounded">
+                            95% New
+                        </div>
+                        <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors">
+                            <i class="fa fa-heart-o"></i>
+                        </button>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="font-medium text-neutral-800" data-lang="product_8_title">Vertu Signature Phone</h3>
+                            <span class="font-bold text-secondary">$650</span>
+                        </div>
+                        <p class="text-sm text-neutral-500 mb-3 line-clamp-2" data-lang="product_8_desc">Genuine Vertu Signature phone, president's signature edition, China Red, 99% new</p>
+                        <div class="flex justify-between items-center text-xs text-neutral-500">
+                            <span class="flex items-center">
+                                <i class="fa fa-map-marker mr-1"></i>
+                                <span data-lang="location">Shinyanga</span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fa fa-clock-o mr-1"></i>
+                                <span data-lang="2_hours_ago">2 hours ago</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Load More Button -->
+            <div class="text-center mt-10">
+                <button class="px-6 py-3 bg-white border border-primary text-primary rounded-full hover:bg-primary/5 transition-colors" data-lang="load_more">Load More</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-neutral-800 mb-4" data-lang="how_it_works_title">How tukupoa Works</h2>
+                <p class="text-lg text-neutral-600" data-lang="how_it_works_subtitle">Our platform makes buying and selling secondhand items simple, safe, and convenient.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold mx-auto mb-4">1</div>
+                    <h3 class="text-xl font-semibold mb-3" data-lang="step_1_title">List Your Item</h3>
+                    <p class="text-neutral-600" data-lang="step_1_desc">Take photos, write a description, set a price, and post your item in minutes.</p>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="text-center">
+                    <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold mx-auto mb-4">2</div>
+                    <h3 class="text-xl font-semibold mb-3" data-lang="step_2_title">Connect with Buyers</h3>
+                    <p class="text-neutral-600" data-lang="step_2_desc">Respond to inquiries, negotiate prices, and arrange meetups through our secure messaging system.</p>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-primary text-3xl font-bold mx-auto mb-4">3</div>
+                    <h3 class="text-xl font-semibold mb-3" data-lang="step_3_title">Complete the Sale</h3>
+                    <p class="text-neutral-600" data-lang="step_3_desc">Meet in a safe public place, exchange the item for payment, and leave feedback.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-neutral-100">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold text-neutral-800 mb-4" data-lang="testimonials_title">What Our Users Say</h2>
+                <p class="text-lg text-neutral-600" data-lang="testimonials_subtitle">Hear from our community of buyers and sellers.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-card">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-neutral-600 mb-6" data-lang="testimonial_1">"I sold my old phone within 2 days on TukuPoa. The process was so easy and the buyer was very responsive. Highly recommended!"</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 font-bold">A</div>
+                        <div class="ml-3">
+                            <h4 class="font-medium text-neutral-800">Amara Johnson</h4>
+                            <p class="text-sm text-neutral-500">Seller from Lagos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-card">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                    </div>
+                    <p class="text-neutral-600 mb-6" data-lang="testimonial_2">"I found a great deal on a used laptop that was exactly what I needed. The seller was honest about the condition and even helped me set it up."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 font-bold">M</div>
+                        <div class="ml-3">
+                            <h4 class="font-medium text-neutral-800">Michael Kimani</h4>
+                            <p class="text-sm text-neutral-500">Buyer from Nairobi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-card">
+                    <div class="flex items-center mb-4">
+                        <div class="text-yellow-400 flex">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                        </div>
+                    </div>
+                    <p class="text-neutral-600 mb-6" data-lang="testimonial_3">"TukuPoa has been a game-changer for me. I've been able to sell furniture and appliances when I moved, and buy quality items at affordable prices."</p>
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 font-bold">S</div>
+                        <div class="ml-3">
+                            <h4 class="font-medium text-neutral-800">Sara Diop</h4>
+                            <p class="text-sm text-neutral-500">Buyer &amp; Seller from Dakar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="py-16 bg-gradient">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-neutral-800 mb-4" data-lang="cta_title">Ready to Start Buying or Selling?</h2>
+                <p class="text-lg text-neutral-600 mb-8" data-lang="cta_subtitle">Join TukuPoa today and discover the best deals on secondhand items in your area.</p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="#" class="btn-primary bg-primary text-white px-8 py-3 rounded-full font-medium text-center" data-lang="join_now">Join Now</a>
+                    <a href="#" class="btn-secondary bg-secondary text-white px-8 py-3 rounded-full font-medium text-center" data-lang="learn_more">Learn More</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-neutral-800 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+                <!-- Company Info -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-6">
+                        <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/493aa1cd91444607b174998a2937dbf2~tplv-a9rns2rl98-image.image?lk3s=8e244e95&amp;rcl=2026011521561387F0CBA1521CF3CA2AFB&amp;rrcfp=f06b921b&amp;x-expires=1771077436&amp;x-signature=HT%2FMLtgezEVnrTn6E4gM2B%2BEAMk%3D" alt="TukuPoa Logo" class="h-8 w-8">
+                        <h3 class="text-xl font-bold">TukuPoa</h3>
+                    </div>
+                    <p class="text-neutral-400 mb-6" data-lang="footer_desc">tukupoa is a leading secondhand marketplace connecting buyers and sellers across Africa.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-neutral-400 hover:text-white transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6" data-lang="quick_links">Quick Links</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="home">Home</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="how_it_works">How It Works</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="categories">Categories</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="testimonials">Testimonials</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="about">About Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Help & Support -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6" data-lang="help_support">Help &amp; Support</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="faq">FAQ</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="safety_tips">Safety Tips</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="seller_guide">Seller Guide</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="buyer_guide">Buyer Guide</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="contact_us">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact Information -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6" data-lang="contact_us">Contact Us</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fa fa-user text-neutral-400 mt-1 mr-3"></i>
+                            <span class="text-neutral-400">Owner: JACKSON JACKSON</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-envelope text-neutral-400 mt-1 mr-3"></i>
+                            <a href="mailto:jjkingumwile@gmail.com" class="text-neutral-400 hover:text-white transition-colors">jjkingumwile@gmail.com</a>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-phone text-neutral-400 mt-1 mr-3"></i>
+                            <a href="tel:+255764895347" class="text-neutral-400 hover:text-white transition-colors">+255 764 895 347</a>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-6" data-lang="legal">Legal</h3>
+                    <ul class="space-y-3">
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="terms_of_service">Terms of Service</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="privacy_policy">Privacy Policy</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="cookie_policy">Cookie Policy</a></li>
+                        <li><a href="#" class="text-neutral-400 hover:text-white transition-colors" data-lang="community_guidelines">Community Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-neutral-700 pt-8">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-neutral-400 text-sm mb-4 md:mb-0" data-lang="copyright">© 2025 tukupoa. Owned by JACKSON JACKSON. All rights reserved.</p>
+                    <div class="flex space-x-6">
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors" data-lang="terms">Terms</a>
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors" data-lang="privacy">Privacy</a>
+                        <a href="#" class="text-neutral-400 hover:text-white text-sm transition-colors" data-lang="cookies">Cookies</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Image Search Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center image-search-modal" id="image-search-modal">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4 overflow-hidden">
+            <div class="p-4 border-b border-neutral-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-neutral-800" data-lang="image_search">Image Search</h3>
+                    <button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors" id="close-image-search-modal">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary mx-auto mb-3">
+                        <i class="fa fa-camera text-2xl"></i>
+                    </div>
+                    <h4 class="font-medium text-neutral-800 mb-2" data-lang="search_with_image">Search with Image</h4>
+                    <p class="text-sm text-neutral-500" data-lang="image_search_help">Upload an image or take a photo to find similar items</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <!-- Upload Area -->
+                    <div class="border-2 border-dashed border-neutral-300 rounded-lg p-4 text-center cursor-pointer hover:border-primary transition-colors" id="image-upload-area">
+                        <input type="file" accept="image/*" class="hidden" id="image-upload-input">
+                        <div id="upload-placeholder">
+                            <i class="fa fa-cloud-upload text-2xl text-neutral-400 mb-2"></i>
+                            <p class="text-sm text-neutral-600 mb-1" data-lang="upload_image">Upload Image</p>
+                            <p class="text-xs text-neutral-400" data-lang="supported_formats">JPG, PNG, WEBP (Max 5MB)</p>
+                        </div>
+                        <div class="hidden" id="image-preview-container">
+                            <div class="relative inline-block">
+                                <img src="" alt="Preview" class="max-h-40 max-w-full rounded-md image-upload-preview" id="image-preview">
+                                <button class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-white shadow flex items-center justify-center text-neutral-600 hover:text-error transition-colors" id="remove-preview-image">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- OR Separator -->
+                    <div class="flex items-center">
+                        <div class="flex-1 h-px bg-neutral-200"></div>
+                        <span class="px-3 text-sm text-neutral-400" data-lang="or">OR</span>
+                        <div class="flex-1 h-px bg-neutral-200"></div>
+                    </div>
+                    
+                    <!-- Camera Button -->
+                    <button class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center font-medium" id="take-photo-button">
+                        <i class="fa fa-camera mr-2"></i>
+                        <span data-lang="take_photo">Take Photo</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Condition Rating Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center condition-modal" id="condition-modal">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4 overflow-hidden">
+            <div class="p-4 border-b border-neutral-200">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-neutral-800" data-lang="condition_explanation">Condition Explanation</h3>
+                    <button class="w-8 h-8 rounded-full flex items-center justify-center text-neutral-600 hover:bg-neutral-100 transition-colors" id="close-condition-modal">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 gap-4">
+                    <!-- 99% New -->
+                    <div class="condition-item p-3 border border-neutral-200 rounded-lg flex items-start space-x-3">
+                        <div class="condition-badge condition-99 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">
+                            99% New
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-neutral-800 mb-1">Like New</h4>
+                            <p class="text-sm text-neutral-600">Almost no signs of use, perfect condition</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 95% New -->
+                    <div class="condition-item p-3 border border-neutral-200 rounded-lg flex items-start space-x-3">
+                        <div class="condition-badge condition-95 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">
+                            95% New
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-neutral-800 mb-1">Very Good</h4>
+                            <p class="text-sm text-neutral-600">Minor signs of use, excellent working condition</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 90% New -->
+                    <div class="condition-item p-3 border border-neutral-200 rounded-lg flex items-start space-x-3">
+                        <div class="condition-badge condition-90 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">
+                            90% New
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-neutral-800 mb-1">Good</h4>
+                            <p class="text-sm text-neutral-600">Moderate signs of use, good working condition</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 80% New -->
+                    <div class="condition-item p-3 border border-neutral-200 rounded-lg flex items-start space-x-3">
+                        <div class="condition-badge condition-80 text-xs font-bold px-2 py-1 rounded whitespace-nowrap">
+                            80% New
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-neutral-800 mb-1">Fair</h4>
+                            <p class="text-sm text-neutral-600">Visible signs of use, functional but may need minor repairs</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-6 border-t border-neutral-200">
+                    <h4 class="font-medium text-neutral-800 mb-3" data-lang="functionality_ratings">Functionality Ratings</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-success/10 text-success text-xs font-bold px-2 py-1 rounded whitespace-nowrap">S</span>
+                            <div>
+                                <h5 class="font-medium text-neutral-800 mb-1">Excellent</h5>
+                                <p class="text-sm text-neutral-600">Perfect functionality, no repairs needed, used less than 6 months</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded whitespace-nowrap">A</span>
+                            <div>
+                                <h5 class="font-medium text-neutral-800 mb-1">Very Good</h5>
+                                <p class="text-sm text-neutral-600">Good functionality, may have minor internal issues, battery performance reduced</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-warning/10 text-warning text-xs font-bold px-2 py-1 rounded whitespace-nowrap">B</span>
+                            <div>
+                                <h5 class="font-medium text-neutral-800 mb-1">Good</h5>
+                                <p class="text-sm text-neutral-600">Basic functionality intact, may have memory/hard drive issues, good value</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-3">
+                            <span class="bg-secondary/10 text-secondary text-xs font-bold px-2 py-1 rounded whitespace-nowrap">C</span>
+                            <div>
+                                <h5 class="font-medium text-neutral-800 mb-1">Fair</h5>
+                                <p class="text-sm text-neutral-600">Basic functions work, may need battery or other component replacement</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Product Detail Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center" id="product-modal">
+        <div class="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div class="relative">
+                <button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center text-neutral-600 hover:text-primary transition-colors z-10" id="close-modal">
+                    <i class="fa fa-times"></i>
+                </button>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2">
+                    <!-- Product Images -->
+                    <div class="bg-neutral-100 p-4">
+                        <div class="relative">
+                            <img src="https://p11-doubao-search-sign.byteimg.com/labis/75465b9847562e08109251e80e92f9cb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=w6KfrTlEYWCaXL%2F7Wwl3iKWOgYg%3D" alt="VIVO X23 Phone" class="w-full h-auto rounded-lg" id="modal-product-image">
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 mt-4">
+                            <div class="border-2 border-primary rounded-md overflow-hidden">
+                                <img src="https://p11-doubao-search-sign.byteimg.com/labis/75465b9847562e08109251e80e92f9cb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=w6KfrTlEYWCaXL%2F7Wwl3iKWOgYg%3D" alt="VIVO X23 Phone" class="w-full h-16 object-cover">
+                            </div>
+                            <div class="border-2 border-transparent hover:border-primary rounded-md overflow-hidden">
+                                <img src="https://p26-doubao-search-sign.byteimg.com/labis/4768faabf16bb40ded8dab7c17e0ae7a~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=a0QUpAdSP9%2BQaM6%2BOYVxPEkxm30%3D" alt="VIVO X23 Phone" class="w-full h-16 object-cover">
+                            </div>
+                            <div class="border-2 border-transparent hover:border-primary rounded-md overflow-hidden">
+                                <img src="https://p11-doubao-search-sign.byteimg.com/tos-cn-i-be4g95zd3a/1892598839614636040~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=%2BpdDQX5gI4IPWr2kdAR6g3x2Bmc%3D" alt="VIVO X23 Phone" class="w-full h-16 object-cover">
+                            </div>
+                            <div class="border-2 border-transparent hover:border-primary rounded-md overflow-hidden">
+                                <img src="https://p3-doubao-search-sign.byteimg.com/labis/39d49c262e6da393a07d8e058b6a6cfb~tplv-be4g95zd3a-image.jpeg?lk3s=feb11e32&amp;x-expires=1784037406&amp;x-signature=U4Z6bdVwEW3Ew283p0Ec2VTOgC8%3D" alt="VIVO X23 Phone" class="w-full h-16 object-cover">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product Details -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h2 class="text-2xl font-bold text-neutral-800" id="modal-product-title">VIVO X23 Phone</h2>
+                            <span class="text-2xl font-bold text-secondary" id="modal-product-price">$150</span>
+                        </div>
+                        
+                        <div class="flex items-center mb-6">
+                            <div class="flex items-center text-yellow-400 mr-2">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star-half-o"></i>
+                            </div>
+                            <span class="text-sm text-neutral-500">4.5 (24 reviews)</span>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold" data-lang="product_details">Product Details</h3>
+                                <button class="text-sm text-primary hover:underline flex items-center" id="show-condition-explanation">
+                                    <i class="fa fa-info-circle mr-1"></i>
+                                    <span data-lang="condition_explanation">Condition Explanation</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Condition Rating -->
+                            <div class="bg-neutral-50 rounded-lg p-4 mb-4">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="font-medium text-neutral-800">Condition Rating</h4>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="condition-badge condition-95 text-sm font-bold px-3 py-1.5 rounded">
+                                            95% New
+                                        </div>
+                                        <span class="bg-primary/10 text-primary text-xs font-bold px-2 py-1 rounded">A</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <h5 class="text-sm text-neutral-500 mb-1">Appearance</h5>
+                                        <div class="flex items-center">
+                                            <div class="w-full bg-neutral-200 rounded-full h-2 mr-2">
+                                                <div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
+                                            </div>
+                                            <span class="text-sm font-medium">95%</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h5 class="text-sm text-neutral-500 mb-1">Functionality</h5>
+                                        <div class="flex items-center">
+                                            <div class="w-full bg-neutral-200 rounded-full h-2 mr-2">
+                                                <div class="bg-success h-2 rounded-full" style="width: 90%"></div>
+                                            </div>
+                                            <span class="text-sm font-medium">A</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <ul class="space-y-2 text-neutral-600">
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>6GB RAM, 128GB Storage</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>Screen fingerprint sensor</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>Dual SIM support</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>Minor scratches on back cover</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>Battery health: 85%</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fa fa-check-circle text-primary mt-1 mr-2"></i>
+                                    <span>Comes with original charger</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold mb-2" data-lang="seller_info">Seller Information</h3>
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 rounded-full bg-neutral-200 flex items-center justify-center text-neutral-600 font-bold">J</div>
+                                <div class="ml-3">
+                                    <h4 class="font-medium text-neutral-800">John Doe</h4>
+                                    <div class="flex items-center text-sm text-neutral-500">
+                                        <span class="flex items-center">
+                                            <i class="fa fa-star text-yellow-400 mr-1"></i>
+                                            <span>4.8</span>
+                                        </span>
+                                        <span class="mx-2">•</span>
+                                        <span>Joined 2 years ago</span>
+                                        <span class="mx-2">•</span>
+                                        <span>124 sales</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center text-sm text-neutral-500 mb-2">
+                                <i class="fa fa-map-marker mr-2"></i>
+                                <span>Dar es Salaam, Tanzania</span>
+                            </div>
+                            <div class="flex items-center text-sm text-neutral-500">
+                                <i class="fa fa-clock-o mr-2"></i>
+                                <span>Response time: Usually within a few hours</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-col space-y-3">
+                            <button class="w-full bg-secondary text-white py-3 rounded-lg hover:bg-secondary/90 transition-colors flex items-center justify-center" data-lang="buy_now">
+                                <i class="fa fa-shopping-cart mr-2"></i>
+                                <span>Buy Now</span>
+                            </button>
+                            <button class="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center" data-lang="contact_seller" id="open-chat-button">
+                                <i class="fa fa-comment mr-2"></i>
+                                <span>Contact Seller</span>
+                            </button>
+                            <button class="w-full border border-neutral-300 text-neutral-700 py-3 rounded-lg hover:bg-neutral-50 transition-colors flex items-center justify-center">
+                                <i class="fa fa-heart-o mr-2"></i>
+                                <span>Add to Favorites</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Language translations
+        const translations = {
+            en: {
+                brand: "tukupoa",
+                hot_sales: "Hot Sales",
+                search_placeholder: "Search for items...",
+                how_it_works: "How It Works",
+                about: "About",
+                language: "English",
+                login: "Login",
+                sign_up: "Sign Up",
+                hero_title: "Buy & Sell Secondhand Items Easily",
+                hero_subtitle: "Join our community and find great deals on pre-loved items or sell what you don't need anymore.",
+                explore_items: "Explore Items",
+                sell_item: "Sell an Item",
+                categories: "Categories",
+                view_all: "View All",
+                all_categories: "All",
+                electronics: "Electronics",
+                clothing: "Clothing",
+                furniture: "Furniture",
+                books: "Books",
+                bicycles: "Bicycles",
+                appliances: "Appliances",
+                other: "Other",
+                featured_items: "Featured Items",
+                sort_by: "Sort by",
+                newest: "Newest",
+                price_low_to_high: "Price: Low to High",
+                price_high_to_low: "Price: High to Low",
+                most_popular: "Most Popular",
+                filter: "Filter",
+                all_listings: "All Listings",
+                nearby: "Nearby",
+                new_condition: "New Condition",
+                used_condition: "Used Condition",
+                product_1_title: "VIVO X23 Phone",
+                product_1_desc: "6+128GB, screen fingerprint, dual SIM, good condition",
+                product_2_title: "Burberry Wool Coat",
+                product_2_desc: "Women's black wool-cashmere blend coat, size M, 99% new",
+                product_3_title: "Wooden Wardrobe",
+                product_3_desc: "Solid wood wardrobe with 4 doors and 3 drawers, good condition",
+                product_4_title: "Used Books Collection",
+                product_4_desc: "Collection of 20+ books including fiction, non-fiction, and textbooks",
+                product_5_title: "Giant Mountain Bike",
+                product_5_desc: "Giant ATX850 mountain bike, red, 27 speeds, good condition",
+                product_6_title: "Beats Studio Buds+",
+                product_6_desc: "Transparent in-ear Bluetooth headphones with active noise cancellation, 99% new",
+                product_7_title: "Midea Refrigerator",
+                product_7_desc: "Double door refrigerator, 200L capacity, silver color, good working condition",
+                product_8_title: "Vertu Signature Phone",
+                product_8_desc: "Genuine Vertu Signature phone, president's signature edition, China Red, 99% new",
+                location: "Location",
+                2_hours_ago: "2 hours ago",
+                5_hours_ago: "5 hours ago",
+                1_day_ago: "1 day ago",
+                2_days_ago: "2 days ago",
+                3_days_ago: "3 days ago",
+                4_hours_ago: "4 hours ago",
+                1_week_ago: "1 week ago",
+                quick_chat: "Quick Chat",
+                my_account: "My Account",
+                profile: "Profile",
+                favorites: "Favorites",
+                my_listings: "My Listings",
+                settings: "Settings",
+                logout: "Logout",
+                image_search: "Image Search",
+                search_with_image: "Search with Image",
+                image_search_help: "Upload an image or take a photo to find similar items",
+                upload_image: "Upload Image",
+                supported_formats: "JPG, PNG, WEBP (Max 5MB)",
+                take_photo: "Take Photo",
+                or: "OR",
+                searching: "Searching...",
+                found_items: "Found items",
+                no_items_found: "No items found",
+                try_different_image: "Try a different image or adjust your search",
+                condition_explanation: "Condition Explanation",
+                functionality_ratings: "Functionality Ratings",
+                load_more: "Load More",
+                how_it_works_title: "How TukuPoa Works",
+                how_it_works_subtitle: "Our platform makes buying and selling secondhand items simple, safe, and convenient.",
+                step_1_title: "List Your Item",
+                step_1_desc: "Take photos, write a description, set a price, and post your item in minutes.",
+                step_2_title: "Connect with Buyers",
+                step_2_desc: "Respond to inquiries, negotiate prices, and arrange meetups through our secure messaging system.",
+                step_3_title: "Complete the Sale",
+                step_3_desc: "Meet in a safe public place, exchange the item for payment, and leave feedback.",
+                testimonials_title: "What Our Users Say",
+                testimonials_subtitle: "Hear from our community of buyers and sellers.",
+                testimonial_1: "I sold my old phone within 2 days on TukuPoa. The process was so easy and the buyer was very responsive. Highly recommended!",
+                testimonial_2: "I found a great deal on a used laptop that was exactly what I needed. The seller was honest about the condition and even helped me set it up.",
+                testimonial_3: "TukuPoa has been a game-changer for me. I've been able to sell furniture and appliances when I moved, and buy quality items at affordable prices.",
+                cta_title: "Ready to Start Buying or Selling?",
+                cta_subtitle: "Join TukuPoa today and discover the best deals on secondhand items in your area.",
+                join_now: "Join Now",
+                learn_more: "Learn More",
+                footer_desc: "TukuPoa is a leading secondhand marketplace connecting buyers and sellers across Africa.",
+                quick_links: "Quick Links",
+                home: "Home",
+                categories: "Categories",
+                testimonials: "Testimonials",
+                about_us: "About Us",
+                help_support: "Help & Support",
+                faq: "FAQ",
+                safety_tips: "Safety Tips",
+                seller_guide: "Seller Guide",
+                buyer_guide: "Buyer Guide",
+                contact_us: "Contact Us",
+                legal: "Legal",
+                terms_of_service: "Terms of Service",
+                privacy_policy: "Privacy Policy",
+                cookie_policy: "Cookie Policy",
+                community_guidelines: "Community Guidelines",
+                copyright: "© 2025 TukuPoa. All rights reserved.",
+                terms: "Terms",
+                privacy: "Privacy",
+                cookies: "Cookies",
+                product_details: "Product Details",
+                seller_info: "Seller Information",
+                buy_now: "Buy Now",
+                contact_seller: "Contact Seller",
+                english: "English",
+                swahili: "Kiswahili"
+            },
+            sw: {
+                brand: "tukupoa",
+                hot_sales: "Mauzo ya Juu",
+                search_placeholder: "Tafuta vitu...",
+                how_it_works: "Jinsi Inavyofanya Kazi",
+                about: "Kuhusu",
+                language: "Kiswahili",
+                login: "Ingia",
+                sign_up: "Jiunge",
+                hero_title: "Nunua na Uuza Vitu Vya Pili kwa Rahisi",
+                hero_subtitle: "Jiunge na jamii yetu na pata faida kubwa kwa vitu vilivyotumika au uuzie vitu ambavyo hauvitaki tena.",
+                explore_items: "Tafuta Vitu",
+                sell_item: "Uuza Kitu",
+                categories: "Vikundi",
+                view_all: "Tazama Zote",
+                all_categories: "Zote",
+                electronics: "Elektroniki",
+                clothing: "Mavazi",
+                furniture: "Vifaa vya Nyumba",
+                books: "Vitabu",
+                bicycles: "Baisikeli",
+                appliances: "Vifaa vya Kihome",
+                other: "Nyingine",
+                featured_items: "Vitu Vya Kujulikana",
+                sort_by: "Sort by",
+                newest: "Mpya",
+                price_low_to_high: "Gharama: Low to High",
+                price_high_to_low: "Gharama: High to Low",
+                most_popular: "Utafutaji Wa Juu",
+                filter: "Filter",
+                all_listings: "Maelezo Yote",
+                nearby: "Kuzunguka",
+                new_condition: "Haki Mpya",
+                used_condition: "Haki Iliyotumika",
+                product_1_title: "Simu ya VIVO X23",
+                product_1_desc: "6+128GB, fingerprini ya skrini, SIM mbili, haki nzuri",
+                product_2_title: "Koti ya Burberry ya Wool",
+                product_2_desc: "Koti la mwanamke la blend ya nyama na cashmere, saizi M, 99% mpya",
+                product_3_title: "Mkabala wa Mbao",
+                product_3_desc: "Mkabala wa mbao thabiti na milango 4 na drawer 3, haki nzuri",
+                product_4_title: "Mkusanyiko wa Vitabu Vilivyotumika",
+                product_4_desc: "Mkusanyiko wa vitabu 20+ ikiwa ni pamoja na fiction, non-fiction, na vitabu vya darasa",
+                product_5_title: "Baisikeli ya Mountain Bike ya Giant",
+                product_5_desc: "Baisikeli ya mountain bike ya Giant ATX850, nyekundu, 27 kasi, haki nzuri",
+                product_6_title: "Beats Studio Buds+",
+                product_6_desc: "Sikio la ndani la Bluetooth na utunzaji wa kelele, 99% mpya",
+                product_7_title: "Fridge ya Midea",
+                product_7_desc: "Fridge ya mlango mbili, uwezo wa 200L, rangi ya fedha, haki nzuri ya kazi",
+                product_8_title: "Simu ya Vertu Signature",
+                product_8_desc: "Simu ya kweli ya Vertu Signature, edition ya kichwa wa serikali, China Red, 99% mpya",
+                location: "Mpango wa Kituo",
+                2_hours_ago: "Mara 2 masaa",
+                5_hours_ago: "Mara 5 masaa",
+                1_day_ago: "Mara 1 siku",
+                2_days_ago: "Mara 2 siku",
+                3_days_ago: "Mara 3 siku",
+                4_hours_ago: "Mara 4 masaa",
+                1_week_ago: "Mara 1 wiki",
+                quick_chat: "Mkono wa Haraka",
+                my_account: "Akaunti Yangu",
+                profile: "Wasifu",
+                favorites: "Mapenzi",
+                my_listings: "Maonyesho Yangu",
+                settings: "Mipangilio",
+                logout: "Kujaa",
+                load_more: "Pakia Zaidi",
+                how_it_works_title: "Jinsi TukuPoa Inavyofanya Kazi",
+                how_it_works_subtitle: "Platform yetu inafanya ununuaji na uuzaji wa vitu vya pili kuwa rahisi, salama, na unaowezekana.",
+                step_1_title: "Onyesha Kitu Chako",
+                step_1_desc: "Piga picha, andika maelezo, weka gharama, na uchapishe kitu chako kwa dakika chache.",
+                step_2_title: "Kusambatanisha na Wannunua",
+                step_2_desc: "Jibu mashtaka, negociania gharama, na andika mkutano kupitia mfumo wetu wa uwasiliana uliowezekana.",
+                step_3_title: "Kamilisha Mauzo",
+                step_3_desc: "Kutana katika mahali pazuri wa umma, kubadili kitu kwa malipo, na kuacha maoni.",
+                testimonials_title: "Kwa Nini Watumiaji Wetu Wanasema",
+                testimonials_subtitle: "Sikia kutoka kwa jamii yetu ya wanuaji na wauzaji.",
+                testimonial_1: "Niliuza simu yangu ya kale ndani ya siku 2 kwenye TukuPoa. Mfumo ulikuwa rahisi sana na mtu aliyenunua alikuwa na mkono. Inashirikiana sana!",
+                testimonial_2: "Nilipata faida kubwa kwa laptop iliyotumika ambayo ilikuwa kila kitu unachokihitaji. Mwauzaji alikuwa wa kweli kuhusu haki na hata akanisaidia kuipanga.",
+                testimonial_3: "TukuPoa imekuwa mabadiliko kubwa kwangu. Nimeweza kuuza vifaa vya nyumba na vifaa vya nyumba wakati nilipokuwa, na kununua vitu vya haki kwa gharama ya kutosha.",
+                cta_title: "Uko Tayari Kuanza Kununua au Kuuza?",
+                cta_subtitle: "Jiunge na TukuPoa leo na utambue faida kubwa zaidi kwa vitu vya pili katika eneo lako.",
+                join_now: "Jiunge Sasa",
+                learn_more: "Jifunze Zaidi",
+                footer_desc: "TukuPoa ni marketplace kubwa ya pili inayosambatanisha wanuaji na wauzaji kote Afrika.",
+                quick_links: "Viungo Haraka",
+                home: "Nyumbani",
+                categories: "Vikundi",
+                testimonials: "Maoni",
+                about_us: "Kuhusu Sisi",
+                help_support: "Msaada na Msaada",
+                faq: "FAQ",
+                safety_tips: "Mbinu za Usalama",
+                seller_guide: "Mfano wa Mwauzaji",
+                buyer_guide: "Mfano wa Mwanunua",
+                contact_us: "Wasiliana Nasi",
+                legal: "Kikatiba",
+                terms_of_service: "Masharti ya Huduma",
+                privacy_policy: "Mpango wa Kihifadhi",
+                cookie_policy: "Mpango wa Cookie",
+                community_guidelines: "Miongozo ya Jamii",
+                copyright: "© 2025 TukuPoa. Hakikisha haki zote.",
+                terms: "Masharti",
+                privacy: "Kihifadhi",
+                cookies: "Vikuki",
+                product_details: "Maelezo ya Bidhaa",
+                seller_info: "Maelezo ya Mwauzaji",
+                buy_now: "Nunua Sasa",
+                contact_seller: "Wasiliana na Mwauzaji",
+                english: "English",
+                swahili: "Kiswahili"
+            }
+        };
+
+        // Set default language
+        let currentLang = 'en';
+
+        // Function to update language
+        function updateLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+            
+            // Update language toggle text
+            document.getElementById('language-toggle').querySelector('span').textContent = translations[lang][lang === 'en' ? 'english' : 'swahili'];
+            
+            // Update document language
+            document.documentElement.lang = lang;
+        }
+
+        // Initialize language
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage(currentLang);
+            
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Language dropdown toggle
+            const languageToggle = document.getElementById('language-toggle');
+            const languageDropdown = document.getElementById('language-dropdown');
+            
+            languageToggle.addEventListener('click', () => {
+                languageDropdown.classList.toggle('hidden');
+            });
+            
+            // Mobile language dropdown toggle
+            const mobileLanguageToggle = document.getElementById('mobile-language-toggle');
+            
+            mobileLanguageToggle.addEventListener('click', () => {
+                languageDropdown.classList.toggle('hidden');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!languageToggle.contains(e.target) && !languageDropdown.contains(e.target)) {
+                    languageDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Language options
+            document.querySelectorAll('.language-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const lang = option.getAttribute('data-value');
+                    updateLanguage(lang);
+                    languageDropdown.classList.add('hidden');
+                });
+            });
+            
+            // Category selection
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.category-item').forEach(i => {
+                        i.classList.remove('active');
+                        i.querySelector('div').classList.remove('bg-primary/10', 'text-primary');
+                        i.querySelector('div').classList.add('bg-neutral-100', 'text-neutral-700');
+                    });
+                    
+                    item.classList.add('active');
+                    item.querySelector('div').classList.remove('bg-neutral-100', 'text-neutral-700');
+                    item.querySelector('div').classList.add('bg-primary/10', 'text-primary');
+                    
+                    // Filter products based on category
+                    const category = item.getAttribute('data-category');
+                    filterProducts(category);
+                });
+            });
+            
+            // Product card click to open modal
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const modal = document.getElementById('product-modal');
+                    const title = card.querySelector('h3').textContent;
+                    const price = card.querySelector('.text-secondary').textContent;
+                    const image = card.querySelector('img').src;
+                    
+                    document.getElementById('modal-product-title').textContent = title;
+                    document.getElementById('modal-product-price').textContent = price;
+                    document.getElementById('modal-product-image').src = image;
+                    
+                    modal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+            
+            // Close modal
+            document.getElementById('close-modal').addEventListener('click', () => {
+                document.getElementById('product-modal').classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Buy Now button functionality
+            document.getElementById('modal-buy-now').addEventListener('click', () => {
+                const productModal = document.getElementById('product-modal');
+                const paymentModal = document.getElementById('payment-modal');
+                const title = document.getElementById('modal-product-title').textContent;
+                const price = document.getElementById('modal-product-price').textContent;
+                
+                // Update payment modal with product info
+                document.getElementById('payment-product-title').textContent = title;
+                document.getElementById('payment-product-price').textContent = price;
+                document.getElementById('payment-amount').value = price.replace('$', '');
+                
+                // Generate random reference
+                const reference = 'TUKU-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + Math.floor(10000 + Math.random() * 90000);
+                document.getElementById('payment-reference').value = reference;
+                
+                // Hide product modal, show payment modal
+                productModal.classList.add('hidden');
+                paymentModal.classList.remove('hidden');
+            });
+            
+            // Close payment modal
+            document.getElementById('close-payment-modal').addEventListener('click', () => {
+                document.getElementById('payment-modal').classList.add('hidden');
+                document.getElementById('product-modal').classList.remove('hidden');
+                document.getElementById('payment-details-form').classList.add('hidden');
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('border-primary', 'bg-blue-50');
+                });
+            });
+            
+            // Cancel payment
+            document.getElementById('cancel-payment').addEventListener('click', () => {
+                document.getElementById('payment-modal').classList.add('hidden');
+                document.getElementById('product-modal').classList.remove('hidden');
+                document.getElementById('payment-details-form').classList.add('hidden');
+                document.querySelectorAll('.payment-option').forEach(option => {
+                    option.classList.remove('border-primary', 'bg-blue-50');
+                });
+            });
+            
+            // Payment option selection
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    const paymentMethod = option.getAttribute('data-payment');
+                    const form = document.getElementById('payment-details-form');
+                    const methodName = document.getElementById('payment-method-name');
+                    const instructions = document.getElementById('payment-instructions');
+                    
+                    // Reset all options
+                    document.querySelectorAll('.payment-option').forEach(opt => {
+                        opt.classList.remove('border-primary', 'bg-blue-50');
+                    });
+                    
+                    // Highlight selected option
+                    option.classList.add('border-primary', 'bg-blue-50');
+                    
+                    // Show form with appropriate details
+                    form.classList.remove('hidden');
+                    
+                    // Set payment method details based on selection
+                    switch(paymentMethod) {
+                        case 'mpesa':
+                            methodName.textContent = 'M-Pesa Payment';
+                            instructions.textContent = 'Enter your M-Pesa phone number to complete the payment';
+                            break;
+                        case 'tigo-pesa':
+                            methodName.textContent = 'Tigo Pesa Payment';
+                            instructions.textContent = 'Enter your Tigo Pesa phone number to complete the payment';
+                            break;
+                        case 'airtel-money':
+                            methodName.textContent = 'Airtel Money Payment';
+                            instructions.textContent = 'Enter your Airtel Money phone number to complete the payment';
+                            break;
+                        case 'halo-pesa':
+                            methodName.textContent = 'Halo Pesa Payment';
+                            instructions.textContent = 'Enter your Halo Pesa phone number to complete the payment';
+                            break;
+                        case 'bank-transfer':
+                            methodName.textContent = 'Bank Transfer';
+                            instructions.textContent = 'Complete the bank transfer to our account and enter the transaction details';
+                            break;
+                        case 'cash-pickup':
+                            methodName.textContent = 'Cash Pickup';
+                            instructions.textContent = 'Pay cash at any of our authorized pickup locations';
+                            break;
+                    }
+                });
+            });
+            
+            // Confirm Payment button
+            document.getElementById('confirm-payment').addEventListener('click', () => {
+                const selectedOption = document.querySelector('input[name="payment-method"]:checked');
+                const phoneInput = document.getElementById('payment-phone');
+                
+                if (!selectedOption) {
+                    alert('Please select a payment method');
+                    return;
+                }
+                
+                const paymentMethod = selectedOption.closest('.payment-option').getAttribute('data-payment');
+                
+                // For mobile money methods, require phone number
+                if (['mpesa', 'tigo-pesa', 'airtel-money', 'halo-pesa'].includes(paymentMethod)) {
+                    if (!phoneInput.value || phoneInput.value.length < 10) {
+                        alert('Please enter a valid phone number');
+                        return;
+                    }
+                }
+                
+                // Show processing state
+                const confirmButton = document.getElementById('confirm-payment');
+                const originalText = confirmButton.textContent;
+                confirmButton.disabled = true;
+                confirmButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Processing...';
+                
+                // Simulate payment processing
+                setTimeout(() => {
+                    const paymentModal = document.getElementById('payment-modal');
+                    const successModal = document.getElementById('payment-success-modal');
+                    
+                    // Update success modal
+                    const amount = document.getElementById('payment-amount').value;
+                    const reference = document.getElementById('payment-reference').value;
+                    const methodName = document.getElementById('payment-method-name').textContent;
+                    
+                    document.getElementById('payment-success-message').textContent = `Your payment of $${amount} has been processed successfully.`;
+                    document.getElementById('success-reference').textContent = reference;
+                    document.getElementById('success-method').textContent = methodName;
+                    
+                    // Show success modal
+                    paymentModal.classList.add('hidden');
+                    successModal.classList.remove('hidden');
+                    
+                    // Reset confirm button
+                    confirmButton.disabled = false;
+                    confirmButton.textContent = originalText;
+                }, 2000);
+            });
+            
+            // Complete Purchase button
+            document.getElementById('complete-purchase').addEventListener('click', () => {
+                const successModal = document.getElementById('payment-success-modal');
+                const productModal = document.getElementById('product-modal');
+                
+                successModal.classList.add('hidden');
+                productModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                
+                // Show success message
+                alert('Purchase completed successfully! The seller will contact you shortly to arrange delivery.');
+            });
+            
+            // Contact Seller button
+            document.getElementById('modal-contact-seller').addEventListener('click', () => {
+                const title = document.getElementById('modal-product-title').textContent;
+                alert(`Opening chat with seller for: ${title}`);
+            });
+            
+            // Close modal when clicking outside
+            document.getElementById('product-modal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('product-modal')) {
+                    document.getElementById('product-modal').classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // User menu toggle
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userDropdown = document.getElementById('user-dropdown');
+            
+            userMenuButton.addEventListener('click', () => {
+                userDropdown.classList.toggle('hidden');
+            });
+            
+            // Close user dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.classList.add('hidden');
+                }
+            });
+            
+            // Chat functionality
+            const chatButton = document.getElementById('chat-button');
+            const mobileChatButton = document.getElementById('mobile-chat-button');
+            const openChatButton = document.getElementById('open-chat-button');
+            
+            function openChat() {
+                alert('Chat feature is now available! You can start chatting with sellers.');
+            }
+            
+            chatButton.addEventListener('click', openChat);
+            mobileChatButton.addEventListener('click', openChat);
+            openChatButton.addEventListener('click', openChat);
+            
+            // Quick chat buttons on product cards
+            document.querySelectorAll('[data-lang="quick_chat"]').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent opening product modal
+                    const productName = button.closest('.product-card').querySelector('h3').textContent;
+                    alert(`Opening quick chat for: ${productName}`);
+                });
+            });
+            
+            // Enhanced Search Functionality
+            const mainSearchInput = document.getElementById('main-search-input');
+            const mobileSearchInput = document.getElementById('mobile-search-input');
+            
+            // Search with improved algorithm
+            function performSearch(query) {
+                if (!query.trim()) return;
+                
+                // Show loading skeleton
+                const productsGrid = document.getElementById('products-grid');
+                productsGrid.innerHTML = '';
+                
+                for (let i = 0; i < 8; i++) {
+                    const skeletonCard = document.createElement('div');
+                    skeletonCard.className = 'bg-white rounded-lg overflow-hidden shadow-card';
+                    skeletonCard.innerHTML = `
+                        <div class="skeleton w-full h-48"></div>
+                        <div class="p-4">
+                            <div class="skeleton w-3/4 h-6 mb-2 rounded"></div>
+                            <div class="skeleton w-1/4 h-6 mb-3 rounded"></div>
+                            <div class="skeleton w-full h-4 mb-2 rounded"></div>
+                            <div class="skeleton w-full h-4 mb-4 rounded"></div>
+                            <div class="flex justify-between">
+                                <div class="skeleton w-1/3 h-4 rounded"></div>
+                                <div class="skeleton w-1/3 h-4 rounded"></div>
+                            </div>
+                        </div>
+                    `;
+                    productsGrid.appendChild(skeletonCard);
+                }
+                
+                // Simulate search delay with improved algorithm
+                setTimeout(() => {
+                    const allProducts = Array.from(document.querySelectorAll('.product-card'));
+                    const searchTerms = query.toLowerCase().split(' ');
+                    
+                    // Advanced search algorithm that matches multiple terms and prioritizes exact matches
+                    const filteredProducts = allProducts.filter(product => {
+                        const title = product.querySelector('h3').textContent.toLowerCase();
+                        const desc = product.querySelector('p').textContent.toLowerCase();
+                        const location = product.querySelector('[data-lang="location"]').textContent.toLowerCase();
+                        
+                        // Check if any search term matches in title, description, or location
+                        const hasMatch = searchTerms.some(term => 
+                            title.includes(term) || desc.includes(term) || location.includes(term)
+                        );
+                        
+                        return hasMatch;
+                    });
+                    
+                    // Sort products by relevance (exact matches first, then partial matches)
+                    filteredProducts.sort((a, b) => {
+                        const titleA = a.querySelector('h3').textContent.toLowerCase();
+                        const titleB = b.querySelector('h3').textContent.toLowerCase();
+                        
+                        // Count exact matches in title
+                        const exactMatchesA = searchTerms.filter(term => titleA.includes(term)).length;
+                        const exactMatchesB = searchTerms.filter(term => titleB.includes(term)).length;
+                        
+                        return exactMatchesB - exactMatchesA;
+                    });
+                    
+                    // Update products grid
+                    productsGrid.innerHTML = '';
+                    
+                    if (filteredProducts.length > 0) {
+                        filteredProducts.forEach((product, index) => {
+                            product.classList.add('fade-in');
+                            product.style.animationDelay = `${index * 0.1}s`;
+                            productsGrid.appendChild(product);
+                        });
+                    } else {
+                        const noResultsMessage = document.createElement('div');
+                        noResultsMessage.className = 'col-span-full text-center py-12';
+                        noResultsMessage.innerHTML = `
+                            <i class="fa fa-search text-4xl text-neutral-300 mb-4"></i>
+                            <p class="text-lg text-neutral-500" data-lang="no_items_found">No items found for "${query}"</p>
+                            <p class="text-sm text-neutral-400 mb-4" data-lang="try_different_image">Try different keywords or browse categories</p>
+                            <button class="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors" data-lang="view_all">
+                                View All Products
+                            </button>
+                        `;
+                        productsGrid.appendChild(noResultsMessage);
+                        
+                        // Add event listener to view all products button
+                        noResultsMessage.querySelector('button').addEventListener('click', () => {
+                            document.querySelector('.category-item[data-category="all"]').click();
+                        });
+                    }
+                }, 1000);
+            }
+            
+            // Add search event listeners
+            [mainSearchInput, mobileSearchInput].forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        performSearch(e.target.value);
+                    }
+                });
+            });
+            
+            // Advanced Filtering
+            const filterChips = document.querySelectorAll('.filter-chip[data-filter]');
+            const locationChips = document.querySelectorAll('.filter-chip[data-location]');
+            
+            let currentFilter = 'all';
+            let currentLocation = 'all';
+            
+            // Filter chip functionality
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentFilter = chip.getAttribute('data-filter');
+                    applyCombinedFilters();
+                });
+            });
+            
+            // Location chip functionality
+            locationChips.forEach(chip => {
+                chip.addEventListener('click', () => {
+                    locationChips.forEach(c => c.classList.remove('active'));
+                    chip.classList.add('active');
+                    currentLocation = chip.getAttribute('data-location');
+                    applyCombinedFilters();
+                });
+            });
+            
+            // Apply combined filters (category, filter, location)
+            function applyCombinedFilters() {
+                const products = document.querySelectorAll('.product-card');
+                const productsGrid = document.getElementById('products-grid');
+                
+                // Show loading skeleton
+                productsGrid.innerHTML = '';
+                
+                for (let i = 0; i < 8; i++) {
+                    const skeletonCard = document.createElement('div');
+                    skeletonCard.className = 'bg-white rounded-lg overflow-hidden shadow-card';
+                    skeletonCard.innerHTML = `
+                        <div class="skeleton w-full h-48"></div>
+                        <div class="p-4">
+                            <div class="skeleton w-3/4 h-6 mb-2 rounded"></div>
+                            <div class="skeleton w-1/4 h-6 mb-3 rounded"></div>
+                            <div class="skeleton w-full h-4 mb-2 rounded"></div>
+                            <div class="skeleton w-full h-4 mb-4 rounded"></div>
+                            <div class="flex justify-between">
+                                <div class="skeleton w-1/3 h-4 rounded"></div>
+                                <div class="skeleton w-1/3 h-4 rounded"></div>
+                            </div>
+                        </div>
+                    `;
+                    productsGrid.appendChild(skeletonCard);
+                }
+                
+                // Simulate filtering delay
+                setTimeout(() => {
+                    const filteredProducts = Array.from(products).filter(product => {
+                        // Location filter
+                        if (currentLocation !== 'all') {
+                            const location = product.querySelector('[data-lang="location"]').textContent.toLowerCase();
+                            const locationMap = {
+                                'dar_es_salaam': 'dar es salaam',
+                                'nairobi': 'nairobi',
+                                'kampala': 'kampala',
+                                'lagos': 'lagos',
+                                'cape_town': 'cape town'
+                            };
+                            
+                            if (!location.includes(locationMap[currentLocation])) {
+                                return false;
+                            }
+                        }
+                        
+                        // Filter filter
+                        if (currentFilter === 'price_low') {
+                            // This would normally sort by price, but we'll just return all for now
+                            // since we're just simulating the filtering
+                        } else if (currentFilter === 'hot_sales') {
+                            // Check if product is in hot sales
+                            const isHotSale = product.closest('.hot-sales-section') !== null;
+                            if (!isHotSale) {
+                                return false;
+                            }
+                        } else if (currentFilter === 'nearby') {
+                            // This would normally filter by distance
+                            // For now, we'll just filter by Dar es Salaam as "nearby"
+                            const location = product.querySelector('[data-lang="location"]').textContent.toLowerCase();
+                            if (!location.includes('dar es salaam')) {
+                                return false;
+                            }
+                        }
+                        
+                        return true;
+                    });
+                    
+                    // Sort products if price low filter is active
+                    if (currentFilter === 'price_low') {
+                        filteredProducts.sort((a, b) => {
+                            const priceA = parseFloat(a.querySelector('.text-secondary').textContent.replace('$', ''));
+                            const priceB = parseFloat(b.querySelector('.text-secondary').textContent.replace('$', ''));
+                            return priceA - priceB;
+                        });
+                    }
+                    
+                    // Update products grid
+                    productsGrid.innerHTML = '';
+                    
+                    if (filteredProducts.length > 0) {
+                        filteredProducts.forEach((product, index) => {
+                            product.classList.add('fade-in');
+                            product.style.animationDelay = `${index * 0.1}s`;
+                            productsGrid.appendChild(product);
+                        });
+                    } else {
+                        const noResultsMessage = document.createElement('div');
+                        noResultsMessage.className = 'col-span-full text-center py-12';
+                        noResultsMessage.innerHTML = `
+                            <i class="fa fa-filter text-4xl text-neutral-300 mb-4"></i>
+                            <p class="text-lg text-neutral-500" data-lang="no_items_found">No items found</p>
+                            <p class="text-sm text-neutral-400 mb-4" data-lang="try_different_image">Try adjusting your filters</p>
+                            <button class="px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors">
+                                Clear All Filters
+                            </button>
+                        `;
+                        productsGrid.appendChild(noResultsMessage);
+                        
+                        // Add event listener to clear filters button
+                        noResultsMessage.querySelector('button').addEventListener('click', () => {
+                            filterChips.forEach(c => c.classList.remove('active'));
+                            locationChips.forEach(c => c.classList.remove('active'));
+                            document.querySelector('.filter-chip[data-filter="all"]').classList.add('active');
+                            document.querySelector('.filter-chip[data-location="all"]').classList.add('active');
+                            currentFilter = 'all';
+                            currentLocation = 'all';
+                            applyCombinedFilters();
+                        });
+                    }
+                }, 800);
+            }
+            
+            // Image Search Functionality
+            const imageSearchButton = document.getElementById('image-search-button');
+            const mobileImageSearchButton = document.getElementById('mobile-image-search-button');
+            const imageSearchModal = document.getElementById('image-search-modal');
+            const closeImageSearchModal = document.getElementById('close-image-search-modal');
+            const imageUploadArea = document.getElementById('image-upload-area');
+            const imageUploadInput = document.getElementById('image-upload-input');
+            const uploadPlaceholder = document.getElementById('upload-placeholder');
+            const imagePreviewContainer = document.getElementById('image-preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const removePreviewImage = document.getElementById('remove-preview-image');
+            const takePhotoButton = document.getElementById('take-photo-button');
+            
+            // Open image search modal
+            function openImageSearchModal() {
+                imageSearchModal.classList.remove('hidden');
+                imageSearchModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // Close image search modal
+            function closeImageSearchModalFunc() {
+                imageSearchModal.classList.add('hidden');
+                imageSearchModal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+                resetImageUpload();
+            }
+            
+            // Reset image upload area
+            function resetImageUpload() {
+                imageUploadInput.value = '';
+                uploadPlaceholder.classList.remove('hidden');
+                imagePreviewContainer.classList.add('hidden');
+            }
+            
+            // Handle image upload
+            function handleImageUpload(file) {
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        imagePreview.src = e.target.result;
+                        uploadPlaceholder.classList.add('hidden');
+                        imagePreviewContainer.classList.remove('hidden');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+            
+            // Image search simulation
+            function performImageSearch() {
+                // Add camera shutter animation
+                const cameraIcon = imageSearchModal.querySelector('.fa-camera');
+                cameraIcon.classList.add('camera-shutter');
+                
+                setTimeout(() => {
+                    cameraIcon.classList.remove('camera-shutter');
+                    alert('Image search completed! Showing results for similar items.');
+                    closeImageSearchModalFunc();
+                    
+                    // Simulate search results by filtering for electronics
+                    document.querySelector('.category-item[data-category="electronics"]').click();
+                }, 500);
+            }
+            
+            // Event listeners for image search
+            imageSearchButton.addEventListener('click', openImageSearchModal);
+            mobileImageSearchButton.addEventListener('click', openImageSearchModal);
+            closeImageSearchModal.addEventListener('click', closeImageSearchModalFunc);
+            
+            // Image upload area click
+            imageUploadArea.addEventListener('click', () => {
+                if (imagePreviewContainer.classList.contains('hidden')) {
+                    imageUploadInput.click();
+                }
+            });
+            
+            // Image file selection
+            imageUploadInput.addEventListener('change', (e) => {
+                handleImageUpload(e.target.files[0]);
+            });
+            
+            // Remove preview image
+            removePreviewImage.addEventListener('click', (e) => {
+                e.stopPropagation();
+                resetImageUpload();
+            });
+            
+            // Take photo button
+            takePhotoButton.addEventListener('click', () => {
+                if (imagePreviewContainer.classList.contains('hidden')) {
+                    // If no image uploaded, simulate taking a photo
+                    alert('Camera access would be requested here in the full app. For now, we\'ll simulate an image search.');
+                    performImageSearch();
+                } else {
+                    // If image is uploaded, perform search
+                    performImageSearch();
+                }
+            });
+            
+            // Close modal when clicking outside
+            imageSearchModal.addEventListener('click', (e) => {
+                if (e.target === imageSearchModal) {
+                    closeImageSearchModalFunc();
+                }
+            });
+            
+            // Condition Rating Modal Functionality
+            const conditionModal = document.getElementById('condition-modal');
+            const showConditionExplanation = document.getElementById('show-condition-explanation');
+            const closeConditionModal = document.getElementById('close-condition-modal');
+            
+            function openConditionModal() {
+                conditionModal.classList.remove('hidden');
+                conditionModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeConditionModalFunc() {
+                conditionModal.classList.add('hidden');
+                conditionModal.classList.remove('flex');
+                document.body.style.overflow = 'auto';
+            }
+            
+            // Event listeners for condition modal
+            if (showConditionExplanation) {
+                showConditionExplanation.addEventListener('click', openConditionModal);
+            }
+            
+            if (closeConditionModal) {
+                closeConditionModal.addEventListener('click', closeConditionModalFunc);
+            }
+            
+            // Close condition modal when clicking outside
+            conditionModal.addEventListener('click', (e) => {
+                if (e.target === conditionModal) {
+                    closeConditionModalFunc();
+                }
+            });
+            
+            // Add condition badge click handlers
+            document.querySelectorAll('.condition-badge').forEach(badge => {
+                badge.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openConditionModal();
+                });
+            });
+            
+            // Load more button
+            document.querySelector('[data-lang="load_more"]').addEventListener('click', () => {
+                // Show loading state
+                const button = document.querySelector('[data-lang="load_more"]');
+                button.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> Loading...';
+                button.disabled = true;
+                
+                // Simulate loading more products
+                setTimeout(() => {
+                    button.innerHTML = translations[currentLang]['load_more'];
+                    button.disabled = false;
+                    
+                    // Show notification that no more products are available
+                    alert(translations[currentLang]['no_more_products'] || 'No more products available at this time.');
+                }, 1500);
+            });
+        });
+
+        // Function to filter products based on category
+        function filterProducts(category) {
+            const products = document.querySelectorAll('.product-card');
+            
+            // Show loading skeleton
+            const productsGrid = document.getElementById('products-grid');
+            productsGrid.innerHTML = '';
+            
+            for (let i = 0; i < 8; i++) {
+                const skeletonCard = document.createElement('div');
+                skeletonCard.className = 'bg-white rounded-lg overflow-hidden shadow-card';
+                skeletonCard.innerHTML = `
+                    <div class="skeleton w-full h-48"></div>
+                    <div class="p-4">
+                        <div class="skeleton w-3/4 h-6 mb-2 rounded"></div>
+                        <div class="skeleton w-1/4 h-6 mb-3 rounded"></div>
+                        <div class="skeleton w-full h-4 mb-2 rounded"></div>
+                        <div class="skeleton w-full h-4 mb-4 rounded"></div>
+                        <div class="flex justify-between">
+                            <div class="skeleton w-1/3 h-4 rounded"></div>
+                            <div class="skeleton w-1/3 h-4 rounded"></div>
+                        </div>
+                    </div>
+                `;
+                productsGrid.appendChild(skeletonCard);
+            }
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                productsGrid.innerHTML = '';
+                
+                if (category === 'all') {
+                    products.forEach(product => {
+                        productsGrid.appendChild(product);
+                    });
+                } else {
+                    let hasProducts = false;
+                    
+                    products.forEach(product => {
+                        const title = product.querySelector('h3').textContent.toLowerCase();
+                        const desc = product.querySelector('p').textContent.toLowerCase();
+                        
+                        // Simple category matching logic
+                        if (
+                            (category === 'electronics' && (title.includes('phone') || title.includes('headphones') || desc.includes('sim'))) ||
+                            (category === 'clothing' && (title.includes('coat') || title.includes('jacket'))) ||
+                            (category === 'furniture' && (title.includes('wardrobe') || title.includes('table') || title.includes('chair'))) ||
+                            (category === 'books' && title.includes('books')) ||
+                            (category === 'bicycles' && (title.includes('bike') || title.includes('bicycle'))) ||
+                            (category === 'appliances' && (title.includes('refrigerator') || title.includes('fridge')))
+                        ) {
+                            productsGrid.appendChild(product);
+                            hasProducts = true;
+                        }
+                    });
+                    
+                    // Show no products message if no products match the category
+                    if (!hasProducts) {
+                        const noProductsMessage = document.createElement('div');
+                        noProductsMessage.className = 'col-span-full text-center py-12';
+                        noProductsMessage.innerHTML = `
+                            <i class="fa fa-search text-4xl text-neutral-300 mb-4"></i>
+                            <p class="text-lg text-neutral-500">No products found in this category.</p>
+                            <button class="mt-4 px-6 py-2 bg-primary text-white rounded-full hover:bg-primary/90 transition-colors">
+                                View All Products
+                            </button>
+                        `;
+                        productsGrid.appendChild(noProductsMessage);
+                        
+                        // Add event listener to view all products button
+                        noProductsMessage.querySelector('button').addEventListener('click', () => {
+                            document.querySelector('.category-item[data-category="all"]').click();
+                        });
+                    }
+                }
+                
+                // Add animation to newly loaded products
+                const newProducts = document.querySelectorAll('.product-card');
+                newProducts.forEach((product, index) => {
+                    product.classList.add('fade-in');
+                    product.style.animationDelay = `${index * 0.1}s`;
+                });
+            }, 800);
+        }
+    </script>
+
+</body></html>
